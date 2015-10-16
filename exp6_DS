@@ -1,0 +1,149 @@
+// 1411057 A3
+
+#include<malloc.h>
+#include<stdio.h>
+#include<string.h>
+#include<ctype.h>
+#define MAX 100
+
+struct node
+{
+ int data;
+ struct node *left,*right;
+};
+
+struct stack
+{
+ struct node* arr[MAX];
+ int top;
+};
+
+void push(struct stack *s,struct node *t)
+{
+ if(s->top==MAX-1)
+ {
+  printf("\nStack is full");
+  return ;
+ }
+ else
+ {
+  s->top=(s->top)+1;
+  s->arr[s->top]=t;
+ }
+}
+
+struct node* pop(struct stack *s)
+{
+  return (s->arr[s->top--]);
+}
+
+int isoperand(char  c)
+{
+  if( c>='0'&&c<='9' || c>='A'&&c<='Z' || c>='a'&&c<='z' )
+    return  1 ;
+  else
+    return  0 ;
+}
+
+struct node *buildexprestree(char postfix[])
+{
+ int  i ;
+ struct  node  *pnode , *op1 , *op2 ;
+ struct  stack  s ;
+ s.top=-1 ;
+ for(i=0 ; postfix[i]!='\0' ; i++)
+  if(isoperand(postfix[i]))
+  {
+   pnode=(struct node*)malloc(sizeof(struct node)) ;
+   pnode->data=postfix[i] ;
+   pnode->left=pnode->right=NULL ;
+   push(&s,pnode) ;
+  }
+  else
+  {
+   op2=pop(&s) ;
+   op1=pop(&s) ;
+   pnode=(struct node*)malloc(sizeof(struct node)) ;
+   pnode->data=postfix[i] ;
+   pnode->left=op1 ;
+   pnode->right=op2 ;
+   push(&s,pnode) ;
+  }
+  return pop(&s) ;
+}
+
+
+
+void preorder(struct  node  *root)
+{
+  if(root!=NULL)
+  {
+    printf("%c" , root->data) ;
+    preorder(root->left) ;
+    preorder(root->right) ;
+  }
+}
+
+void inorder(struct node *root)
+{
+  if(root!=NULL)
+  {
+    inorder(root->left);
+    printf("%c", root->data);
+    inorder(root->right);
+  }
+}
+
+double applyoperator(int operand1,char operator1,int operand2)
+{
+ switch(operator1)
+ {
+  case '+':
+  return (operand1+operand2);
+  case '-':
+  return (operand1-operand2);
+  case '*':
+  return (operand1*operand2);
+  case '/':
+  return (operand1/operand2);
+ }
+}
+
+double evaluate(struct node *t)
+{
+ char operator1;
+ double operand1,operand2;
+ if(t==NULL)
+   return ;
+ if(t->left==NULL && t->right==NULL)
+   return ((double)(t->data-48));
+ else
+ {
+  operator1=t->data;
+  operand1=evaluate(t->left);
+  operand2=evaluate(t->right);
+  return applyoperator(operand1,operator1,operand2);
+ }
+}
+
+void main()
+{
+ struct node *root=NULL;
+ char postfix[50];
+ int value;
+ clrscr();
+ printf("\nEnter postfix Expression ");
+ gets(postfix);
+ root=buildexprestree(postfix);
+ if(isdigit(postfix[0]))
+ {
+  value=evaluate(root);
+  printf("\nThe value of the expression is %d ",value);
+ }
+ printf("\nPrefix is ");
+ preorder(root);
+ printf("\nInfix is ") ;
+ inorder(root);
+ getch();
+}
+
