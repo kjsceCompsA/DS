@@ -1,0 +1,107 @@
+// 1411057 A3
+
+#include<stdio.h>
+#include<conio.h>
+ int hash_table[50]={0};
+ int n,key,table_size,i;
+
+ int hash(int key)
+{
+ int i;
+i=key%table_size;
+return i;
+}
+
+ int rehash(int key)
+{
+int i;
+i=(key+1)%table_size;
+return i;
+}
+
+int rehashquad(int key,int j)
+{
+int i;
+i=(key+j*j)%table_size;
+return i;
+}
+
+int insert(int key)
+{int i;
+ int coll=0;
+ i=hash(key);
+ if(hash_table[i]==0)
+  hash_table[i]=key;
+ else
+  {while(hash_table[i]!=0)
+    {
+     i=rehash(i);
+     coll++;
+    }
+   hash_table[i]=key;
+   }
+   return coll;
+}
+
+int insertquad(int key)
+{ int i,j=0;
+ int coll=0;
+ i=hash(key);
+ if(hash_table[i]==0)
+  hash_table[i]=key;
+ else
+ {while(hash_table[i]!=0)
+  {j++;
+   coll++;
+  i=rehashquad(i,j);
+  }
+  hash_table[i]=key;
+ }
+ return coll;
+}
+
+void main()
+{int option,ch,op,k,collision,count=0;
+ clrscr();
+ printf("Enter no. of elements ");
+ scanf("%d",&n);
+ printf("\nEnter table size ");
+ scanf("%d",&table_size);
+ if(table_size<n)
+ printf("Table size is less than number of element");
+ else
+ do
+ {printf("\n1.Linear probing\n2.Quadratic probing\nEnter choice \n");
+ scanf("%d",&ch);
+ for(k=0;k<table_size;k++)
+  hash_table[k]=0;
+ count=0;
+  switch(ch)
+  {case 1:for(k=0;k<n;k++)
+	  {printf("\nEnter key ");
+	  scanf("%d",&key);
+	  collision=insert(key);
+	  count+=collision;
+	  }
+	  printf("\nHash table is :\n");
+	  for(k=0;k<table_size;k++)
+	  printf("%d ",hash_table[k]);
+	  printf("\nNumber of Collision is %d.",count);
+	  break;
+  case 2:for(k=0;k<n;k++)
+	 {printf("\nEnter key ");
+	  scanf("%d",&key);
+	  collision=insertquad(key);
+	  count+=collision;
+	  }
+	  printf("\nHash table is :\n");
+	  for(k=0;k<table_size;k++)
+	  printf("%d ",hash_table[k]);
+	  printf("\nNumber of Collision is %d.",count);
+	  break;
+  }
+  printf("\nDo you want to continue->1.yes   2.No ");
+  scanf("%d",&op);
+ }while(op!=2);
+getch();
+}
