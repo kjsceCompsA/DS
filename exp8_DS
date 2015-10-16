@@ -1,0 +1,74 @@
+// 1411057 A3
+
+#include<stdio.h>
+#include<conio.h>
+
+void insertionsort(int a[],int n)
+{
+   int i,j,temp;
+   for(i=1;i<n;i++)
+   {
+    temp=a[i];
+    j=i-1;
+    while((temp<a[j]) &&j>=0)
+     {
+      a[j+1]=a[j];
+      j--;
+      }
+      a[j+1]=temp;
+    }
+    for(i=0;i<n;i++)
+    printf("%d\t",a[i]);
+   }
+
+int smallest(int a[],int n,int i)
+  {
+   int pos =i,small=a[i],k;
+   for(k=i;k<n;k++)
+   {
+     if (a[k]<small)
+     {
+      small=a[k];
+      pos=k;
+      } }
+      return pos;
+
+}
+void selectionsort(int a [],int n)
+{
+  int i,pos,temp;
+  for(i=0;i<n;i++)
+  {
+    pos =smallest(a ,n,i);
+    temp=a[i];
+    a[i]=a[pos];
+    a[pos]=temp;
+    }
+    for(i=0;i<n;i++)
+    printf("%d\t",a[i]);
+    }
+
+   void main ()
+   {
+   int a[10],i,n,choice;
+   clrscr();
+   printf("enter no of elements\n");
+   scanf("%d",&n);
+   printf("enter elements\n");
+   for(i=0;i<n;i++)
+   scanf("%d",&a[i]);
+   do
+   {
+   printf("\n  MAIN MENU\n 1 INSERTION SORT \n 2 SELECTION SORT\n 3 EXIT\n");
+   scanf("%d",&choice);
+   switch(choice) {
+
+   case 1:insertionsort(a,n);
+	  break;
+   case 2:selectionsort(a,n);
+	  break;
+   }
+   }while(choice!=3);
+   getch();
+   }
+
