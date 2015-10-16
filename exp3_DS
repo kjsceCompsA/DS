@@ -1,0 +1,171 @@
+// 1411057 A3
+
+#include <stdio.h>
+#include <conio.h>
+#include <ctype.h>
+#include <string.h>
+#define MAX 100
+
+
+typedef struct
+{
+	int array[MAX];
+	int top;
+} Stack;
+
+int priority(char); 
+void reset(Stack *); 
+int isempty(Stack *); 
+char pop(Stack *);
+void push(Stack *, char);
+char peep(Stack *);
+int eval(char* infix); 
+int main()
+{
+    Stack s;
+    int i,ans;
+    char postfix[100];
+    char c, temp;
+    reset(&s);
+    clrscr();
+    postfix[0] = '\0';
+    i = 0;
+    printf("\nEnter expression (infix form):");
+    
+    while( (temp = getchar()) != '\n' )
+    {
+	if(isalnum(temp))
+	{
+	    
+	    postfix[i] = temp;
+	    i++;
+	}
+	else if(temp == '(')
+	{
+	   
+	    push(&s,'(');
+	}
+	else
+	
+	{
+	    
+	    if(temp == ')')
+	    {
+		
+		while((c = pop(&s)) != '(')
+		    {
+			postfix[i] = c;
+			i++;
+		    }
+	    }
+	    else
+	    
+	    {
+		
+		while(priority(temp) <= priority(peep(&s)) && !isempty(&s))
+		{
+		    c = pop(&s);
+		    postfix[i] = c;
+		    i++;
+		}
+		
+		push(&s,temp);
+	    }
+	}
+    }
+    
+    while(!isempty(&s))
+    {
+       c = pop(&s);
+       postfix[i] = c;
+       i++;
+    }
+    postfix[i] = '\0';
+    printf("\nPostfix form is:- %s",postfix);
+    printf("\nPrefix form is :- %s",strrev(postfix));
+    printf("\nAns is: %d",eval(postfix));
+    getch();
+    return 0;
+}
+
+int priority(char x)
+{
+   if(x == '(')
+	return 0;
+   if(x == '+' || x == '-')
+	return 1;
+   if(x == '*' || x == '/' || x == '%')
+	return 2;
+   
+   return 99;
+}
+
+void reset(Stack *s)
+{
+   
+   s->top = -1;
+}
+
+int isempty(Stack *s)
+{
+    if(s->top == -1)
+	return 1; 
+    else
+	return 0; 
+}
+
+void push(Stack *s,char c)
+{
+  s->top += 1;
+  s->array[s->top] = c;
+}
+
+char pop(Stack *s)
+{
+    s->top -= 1;
+    return s->array[s->top+1];
+}
+
+char peep(Stack * s)
+{
+   return s->array[s->top];
+}
+
+int eval(char * infix)
+{
+    int len,i,a,b;
+    Stack s;
+    reset(&s);
+    len = strlen(infix);
+    for(i = len-1; i >= 0; i--)
+    {
+	if( isalnum(infix[i]) )
+	{
+	    push(&s,infix[i] - '0');
+	}
+	else
+	{
+	    b = pop(&s);
+	    a = pop(&s);
+	    switch(infix[i])
+	    {
+		case '+':
+		  push(&s,a+b);
+		  break;
+		case '-':
+		  push(&s,a-b);
+		  break;
+		case '*':
+		  push(&s,a*b);
+		  break;
+		case '/':
+		  push(&s,a/b);
+		  break;
+		default:
+		  printf("\n unknown operator");
+		  break;
+	    }
+	}
+    }
+
+}
