@@ -1,0 +1,108 @@
+//1411057 A3
+
+#include<stdio.h>
+#include<conio.h>
+#define MAX 100
+int c = 1;
+
+void insert(int a[], int val)
+{
+ int p,temp,k=c;
+
+ if(k==1)
+  a[k] = val;
+
+ else
+ {
+  a[c] = val;
+  p = k/2;
+  while(a[p]<a[k])
+  {
+   if(p == 0)
+   {
+    break;
+   }
+
+   else
+   {
+    temp = a[k];
+    a[k] = a[p];
+    a[p] = temp;
+    k = p;
+    p = k/2;
+   }
+  }
+ }
+ c++;
+}
+
+int deleteMax(int a[])
+{
+ int ans,k=1,temp,p;
+ ans = a[1];
+
+ a[k] = a[c-1];
+
+ while(a[k*2]>a[k] || a[k*2+1]>a[k])
+ {
+  if(a[k*2]>a[k*2+1])
+  {
+   p = k*2;
+   temp = a[p];
+   a[p] = a[k];
+   a[k] = temp;
+   k = k*2;
+  }
+  else
+  {
+   p = k*2+1;
+   temp = a[p];
+   a[p] = a[k];
+   a[k] = temp;
+   k = k*2+1;
+  }
+ }
+ c--;
+ return ans;
+}
+
+
+void main()
+{
+ int n,ch,val,i,a[MAX];
+ clrscr();
+
+ do
+ {
+  printf("\n1.Insert\n2.Delete Max\n3.Display\n4.Exit\nMake a choice: ");
+  scanf("%d",&ch);
+  switch(ch)
+  {
+  case 1:
+   printf("\nenter number of nodes: ");
+   scanf("%d",&n);
+   for(i=0;i<n;i++)
+   {
+    printf("\nenter node value: ");
+    scanf("%d",&val);
+    insert(a,val);
+   }
+   break;
+
+  case 2:
+   n = deleteMax(a);
+   printf("\n%d\n",n);
+   break;
+
+  case 3:
+  printf("\n");
+   for(i=0;i<c-1;i++)
+   {
+    printf("%d ",a[i+1]);
+   }
+    printf("\n");
+   break;
+  }
+ }while(ch!=4);
+ getch();
+}
