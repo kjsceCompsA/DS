@@ -1,0 +1,71 @@
+// 1411057 A3
+
+#include<stdio.h>
+#include<conio.h>
+#define MAX 10
+int n;
+
+void dfs(int adj[][MAX],int v[],int start)
+{
+	int stack[MAX],top=-1,i;
+	stack[++top]=start;
+	v[start]=1;
+	printf("\n");
+	while(top!=-1)
+	{
+	   start=stack[top--];
+	   printf("%c\t",start+65);
+	   for(i=0;i<n;i++)
+	   {
+	      if(adj[start][i]==1&&v[i]==0)
+	      {
+		stack[++top]=i;
+		v[i]=1;
+	      }
+	   }
+	}
+}
+
+void bfs(int adj[][MAX],int v[],int start)
+{
+	int queue[MAX],i, front=-1, rear=-1;
+	queue[++rear]=start;
+	v[start]=1;
+	printf("\n");
+	while(rear!=front)
+	{
+	   start=queue[++front];
+	   printf("%c\t",start+65);
+	   for(i=0;i<n;i++)
+	   {
+	      if(adj[start][i]==1&&v[i]==0)
+	      {
+		queue[++rear]=i;
+		v[i]=1;
+	      }
+	   }
+	}
+}
+
+
+void main()
+{
+  int v[MAX], adj[MAX][MAX],i,j;
+  clrscr();
+  printf("\nEnter n of square matrix ");
+  scanf("%d",&n);
+  for(i=0;i<n;i++)
+    {	printf("\nEnter the row %d ",i);
+	for(j=0;j<n;j++)
+	scanf("%d",&adj[i][j]);
+     }
+  for(i=0;i<MAX;i++)
+  v[i]=0;
+  printf("Dfs:\n");
+  dfs(adj,v,0);
+  printf("Bfs:\n");
+  for(i=0;i<MAX;i++)
+  v[i]=0;
+  bfs(adj,v,0);
+  getch();
+}
