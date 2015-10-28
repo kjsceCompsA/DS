@@ -1,0 +1,101 @@
+#include <stdio.h>
+#include <stdlib.h>
+struct InNode
+{
+	int data;
+	int Priority;
+
+};
+
+struct queue
+{
+	struct InNode node[20];
+	int start;
+	int end;
+};
+void intialize(struct queue *q);
+
+void sort(struct queue *q);
+void insert(struct queue *q);
+
+void remove(struct queue *q);
+/*
+void display(Queue *q);
+*/
+
+void main()
+{
+    struct queue q;
+	intialize(&q);
+	insert(&q);
+}
+
+void intialize(struct queue *q)
+{
+	q->start = -1;
+	q->end = -1;
+}
+void insert(struct queue *q)
+{
+	int Data, priority;
+	if ((q->start) != (q->end) || (q->start) == -1)
+	{
+		printf("enter the data and its priority");
+		scanf("%d%d", &Data, &priority);
+		if ((q->start) == -1)
+		{
+			(q->node[0]).data = Data;
+			(q->node[0]).Priority = priority;
+			q->start = q->end = 0;
+		}
+		else
+		{
+			(q->node[0]).data = Data;
+			(q->node[0]).Priority = priority;
+			(q->end) = (q->end) + 1;
+		}
+	}
+	else
+	{
+		printf("Queue is full");
+	}
+	sort(q);
+}
+void sort(struct queue *q)
+{
+	struct InNode temp;
+	int i, j;
+	for (i = (q->end); i>0; i--)
+	{
+		for (j = i-1; j < (q->end); j++)
+		{
+			if (((q->node[j]).Priority)>((q->node[j + 1]).Priority))
+			{
+				temp = q->node[j + 1];
+				q->node[j + 1] = q->node[j];
+				q->node[j] = temp;
+			}
+
+		}
+	}
+}
+void remove(struct queue *q)
+{
+	int delData;
+	int i;
+	int j;
+	printf("Enter data to be deleted ");
+	scanf("%d", &delData);
+	for (i = 0; i <= q->end; i++)
+	{
+		if ((q->node[i].data) == delData)
+		{
+			for (j = i; j < q->end; j++)
+			{
+				q->node[j] = q->node[j + 1];
+			}
+			(q->end) = (q->end) - 1;
+		}
+
+	}
+}
