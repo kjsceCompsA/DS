@@ -1,0 +1,216 @@
+#include<stdio.h>
+#include<conio.h>
+#include<alloc.h>
+
+typedef struct node
+{
+	int data;
+	int col,row;
+	struct node *rptr,*cptr;
+}Node;
+// m n , row/col headers
+typedef struct frame
+{
+	Node *rhead,*chead;
+	int nor,noc;
+}Matrix;
+// 	make connections(creation of your matrix )
+void insert( Matrix *matptr);
+// 	returns the data field at the ith row and jth column
+int search( Matrix *matptr,int col,int row);
+// 	printng the matrix
+void print(Matrix *matptr);
+/* 1.   during insert say, gotoxyrc function is goin to help you out
+	to locate exactly where the new node is to be placed
+	traverseing will be done either row wise , else column or both (one
+	after the other ) eg:- call from the insert function -
+	gotoxyrc( matptr,row,col,rowise(0)_colwise(1),0)*/
+/* 2. 	same as the above eg- call from deleten is -
+	gotoxyrc( matptr,row,col,rowise(0)_col(1),1);
+	forceiter - in case of deletion it is passed as 1 so that the node
+	prior to the actual node to be deleted
+	is returned so that appropriate connection could be made.*/
+/* 3.	in search node at the ith row and jith column was searched and data
+	was returned in case found else 0
+	gotoxyrc(matptr,row,col,0,0) because it might return the previous node
+	if ith row and jth column does not exist and so check the column no.
+	during return */
+
+Node * gotoxyrc( Matrix *matptr, int x,int y, int RorC, int forceIter);
+// 	deleting the node at ith row and jith column if present else display msg
+
+void deleten(Matrix *matptr,int row,int col);
+/*	creates the main frame of the matrix with array of rowheaders and column
+	headers provided nor and noc wer set.*/
+void init(Matrix *matptr)
+{
+	int i;
+	matptr->rhead=(Node *)malloc(sizeof(Node)*(matptr->nor));
+	matptr->chead=(Node *)malloc(sizeof(Node)*(matptr->noc));
+	// for rowheaders
+	for(i=0;i< (matptr->nor);i++)
+	{
+		(matptr->rhead[i]).cptr=NULL;
+		(matptr->rhead[i]).rptr=(matptr->rhead)+i;
+		(matptr->rhead[i]).data=0;
+		(matptr->rhead[i]).row=i;
+		(matptr->rhead[i]).col=-1;
+	}
+
+	for(i=0;i< (matptr->noc);i++)
+	{
+		(matptr->chead[i]).rptr=NULL;
+		(matptr->chead[i]).cptr=(matptr->chead)+i;
+		(matptr->chead[i]).data=0;
+		(matptr->chead[i]).col=i;
+		(matptr->chead[i]).row=-1;
+	}
+}
+void deleten(Matrix *matptr,int row,int col)
+{       Node *delprev,*temp;
+	delprev= gotoxyrc(matptr,row,col,0,1);
+	if((delprev->rptr)->col!=col)
+	{
+		printf(" not found\n");
+		return;
+	}
+	temp=delprev->rptr;
+	delprev->rptr=temp->rptr;
+	delprev= gotoxyrc(matptr,row,col,1,1);
+	delprev->cptr=temp->cptr;
+	free(temp);
+}
+void main()
+{
+	Matrix  mat;
+	int i,m,n;
+	int valsearchd;
+	clrscr();
+	printf("Enter the number of rows and columns \n");
+	scanf("%d%d",&mat.nor,&mat.noc);
+	init(&mat);
+	for(i=1;i<=3;i++)
+	{
+		insert(&mat);
+	}
+
+	// setting rowheaders cptr to null and like wise for colheader
+	printf(" enter the row and col number to find out data there\n");
+	scanf("%d%d",&m,&n);
+	printf(" value at %d %d is %d \n",m,n,search(&mat,m,n));
+	printf(" printing the matrix\n");
+	print(&mat);
+	printf(" enter the row and column whos data field is to be deleted\n");
+	scanf("%d%d",&m,&n);
+	deleten(&mat,m,n);
+	print(&mat);
+	getch();
+}
+
+Node * gotoxyrc( Matrix *matptr, int x,int y, int RorC, int forceIter)
+{
+	int i;
+	Node* iter;
+	Node* header;
+	if (RorC == 0)
+		header = matptr->rhead + x;
+	else
+		header = matptr->chead + y;
+
+	iter = header;
+	if (RorC == 0)
+	{
+		do
+		{
+			if ( (iter->rptr)->col == y)
+			{
+				if (forceIter)
+				{
+					return iter;
+				}
+				return iter->rptr; // will return pointer to node x y as its found
+			}
+			else if ((iter->rptr)->col > y || iter->rptr == header)
+			{
+				return iter; // will return pos after which insertion should take place
+			}
+			iter = iter->rptr;
+		}while(1);
+	}
+	else
+	{
+		do
+		{
+			if ( (iter->cptr)->row == x)
+			{
+				if(forceIter)
+				{
+					return iter;
+				}
+				return iter->cptr; // will return pointer to node x y as its found
+			}
+			else if ((iter->cptr)->row > x || iter->cptr == header)
+			{
+				return iter; // will return pos after which insertion should take place
+			}
+			iter = iter->cptr;
+		}while(1);
+
+	}
+
+}
+// search funtion
+int search ( Matrix *matptr, int row, int col)
+{
+	Node *result ;
+	result= gotoxyrc( matptr,row,col,0,0);
+	if( result->col == col)
+	{
+		return result->data;
+	}
+	else
+	{
+		return 0;
+	}
+}
+void print( Matrix *matptr)
+{
+	int i,j;
+	for( i= 0; i< matptr->nor;i++)
+	{
+		for(j=0; j<matptr->noc;j++)
+		{
+		       printf("%d  ",search(matptr,i,j));
+		}
+	    printf("\n");
+	 }
+}
+
+void insert( Matrix *matptr)
+{
+	Node  *searched,*newnode;
+	int value,col,row;
+	printf(" Enter the value/data field, row and column number\n");
+	scanf("%d%d%d",&value,&row,&col);
+	searched= gotoxyrc(matptr, row, col,0,0);
+	if( searched->col == col )
+	{
+		printf(" Node exists ");
+		return;
+	}
+	else
+	{
+		newnode = (Node *)malloc(sizeof(Node));
+		newnode->data=value;
+		newnode->col=col;
+		newnode->row=row;
+		newnode->rptr=searched->rptr;
+		searched->rptr=newnode;
+
+		// now linking of column
+		searched= gotoxyrc(matptr,row,col,1,0);
+		newnode->cptr=searched->cptr;
+		searched->cptr=newnode;
+
+	}
+}
