@@ -1,0 +1,83 @@
+#include <stdio.h>
+#include <stdlib.h>
+typedef struct Node
+{
+	int data;
+	struct Node *left, *right;
+}Node;
+void insert(Node **rootptr, int value)
+{
+	Node *temp;
+	if (*rootptr == NULL)
+	{
+		temp = (Node*) malloc (sizeof(Node));
+		temp->data = value;
+		temp->left = temp->right = NULL;
+		*rootptr = temp;
+	}
+	else if ((*rootptr)->data < value)
+	{
+		insert(&((*rootptr)->right), value);
+	}
+
+	else if ((*rootptr)->data > value)
+	{
+		insert(&((*rootptr)->left), value);
+	}
+}
+void remove(Node **rootptr, int value)
+{
+	Node *leftmost;
+	if (*rootptr == NULL)
+	{
+		printf("File does not exist");
+	}
+	else if ((*rootptr)->data < value)
+	{
+		remove(&((*rootptr)->right), value);
+
+	}
+
+	else if ((*rootptr)->data > value)
+	{
+		remove(&((*rootptr)->left), value);
+
+	}
+	else
+	{       //leaf node
+		if ((*rootptr)->left == NULL && (*rootptr)->right == NULL)
+		{
+			*rootptr = NULL;
+
+		}
+		//both child
+		else if ((*rootptr)->left != NULL && (*rootptr)->right != NULL)
+		{
+			leftmost = *rootptr;
+			while (((leftmost->left)->left) != NULL)
+			{
+				leftmost = leftmost->left;
+			}
+			(*rootptr)->data = (leftmost->left)->data;
+			leftmost->left = NULL;
+
+		}
+		//left child
+		else if ((*rootptr)->left)
+		{
+			*rootptr = (*rootptr)->left;
+		}
+		else //right child
+		{
+			*rootptr = (*rootptr)->right;
+		}
+
+	}
+}
+void main()
+{
+	Node *rootptr=NULL;
+	insert(&rootptr,3);
+	remove(&rootptr, 3);
+
+}
