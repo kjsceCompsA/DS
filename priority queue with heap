@@ -1,6 +1,5 @@
 #include<stdio.h>
 #include<conio.h>
-
 typedef struct heap
 {
 	int element[16];
@@ -22,19 +21,15 @@ void enqueue( Heap *heaptr, int data)
 	 i=heaptr->count;
 	 while(i!=1)
 	 {
-
 		  if( heaptr->element[i] > heaptr->element[i/2])
 		  {
 			  swap(heaptr, i, i/2);
 		  }
-
 		  else
 		  break;
 		  i=i/2;
 	  }
-
 }
-
 int dequeue( Heap *heaptr)
 {
        int del;
@@ -46,13 +41,10 @@ int dequeue( Heap *heaptr)
        {
 		if(2*i < heaptr->count)
 		{
-
 			if(heaptr->element[2*i] >heaptr->element[2*i+1])
 			{
 				index = 2*i;
-
 			}
-
 			else
 			{
 				index = 2*i + 1;
@@ -62,29 +54,22 @@ int dequeue( Heap *heaptr)
 			else
 				break;
 			i = index;
-
 		}
-
 		else if( 2*i == heaptr->count)
 		{
-
 			if(heaptr->element[2*i] >  heaptr->element[1])
 			{
 				swap(heaptr, i, 2*i);
 				i= 2*i;
 			}
-
 		}
 		else
 			break;
 	 }
-
 	 return del;
-
 }
 void main()
 {
-
 	Heap heap;
 	clrscr();
 	heap.count=0;
@@ -100,8 +85,5 @@ void main()
 	printf(" dequeue element is %d \n",dequeue(&heap));
 	printf(" dequeue element is %d \n",dequeue(&heap));
 	printf(" dequeue element is %d \n",dequeue(&heap));
-
-
-
 	getch();
 }
