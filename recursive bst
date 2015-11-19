@@ -53,7 +53,7 @@ void remove(Node **rootptr, int value)
 		//both child
 		else if ((*rootptr)->left != NULL && (*rootptr)->right != NULL)
 		{
-			leftmost = *rootptr;
+			leftmost = (*rootptr)->right;
 			while (((leftmost->left)->left) != NULL)
 			{
 				leftmost = leftmost->left;
