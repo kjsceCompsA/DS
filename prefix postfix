@@ -1,18 +1,14 @@
 // 1411057 A3
-
 #include <stdio.h>
 #include <conio.h>
 #include <ctype.h>
 #include <string.h>
 #define MAX 100
-
-
 typedef struct
 {
 	int array[MAX];
 	int top;
 } Stack;
-
 int priority(char); 
 void reset(Stack *); 
 int isempty(Stack *); 
@@ -31,12 +27,10 @@ int main()
     postfix[0] = '\0';
     i = 0;
     printf("\nEnter expression (infix form):");
-    
     while( (temp = getchar()) != '\n' )
     {
 	if(isalnum(temp))
 	{
-	    
 	    postfix[i] = temp;
 	    i++;
 	}
@@ -46,9 +40,7 @@ int main()
 	    push(&s,'(');
 	}
 	else
-	
 	{
-	    
 	    if(temp == ')')
 	    {
 		
